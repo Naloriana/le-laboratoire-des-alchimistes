@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Le laboratoire des alchimistes</title>
+<link href="https://fonts.googleapis.com/css2?family=Almendra:wght@400;700&family=Alegreya+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e4e9e5;--panel:#f3f6f2;--ink:#1c2a2b;--mute:#586a6b;--line:#b4c1bc;--gold:#8a5600;--teal:#13716a;--bad:#a63a2b;--good:#1d7541;--glass:#d3e6e3;--wood:#8b6a45;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#14161f;--panel:#1d2030;--ink:#e6e9ee;--mute:#9aa4b5;--line:#343a52;--gold:#e0b25a;--teal:#5cc6b6;--bad:#ef8b7a;--good:#78d49b;--glass:#2c3a4d;--wood:#6b4f32}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#14161f;--panel:#1d2030;--ink:#e6e9ee;--mute:#9aa4b5;--line:#343a52;--gold:#e0b25a;--teal:#5cc6b6;--bad:#ef8b7a;--good:#78d49b;--glass:#2c3a4d;--wood:#6b4f32}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 "Alegreya Sans",Georgia,serif}
+h1,h2,h3{font-family:Almendra,Georgia,serif;font-weight:700;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:16px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:3px double var(--gold);padding-bottom:10px}
+h1{font-size:clamp(26px,5vw,40px);color:var(--gold);line-height:1.1}
+.stat{color:var(--mute);font-size:15px}
+.grid{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-top:16px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.mission{border-left:5px solid var(--teal)}
+.mission h2{font-size:23px}
+.story{color:var(--mute);margin:4px 0 10px}
+.q{font-weight:700;margin:8px 0}
+.shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-bottom:10px solid var(--wood);padding-bottom:4px}
+.fk{background:none;border:2px solid transparent;border-radius:6px;padding:4px 2px;cursor:pointer;color:var(--ink);font:inherit;text-align:center}
+.fk:hover{border-color:var(--line)}
+.fk[aria-pressed="true"]{border-color:var(--gold);background:var(--bg)}
+.fk b{display:block;font-family:Almendra,serif;font-size:18px}
+.fk small{display:block;min-height:2.4em;font-size:12px;line-height:1.2;color:var(--teal)}
+button,select{font:inherit;color:var(--ink)}
+.btn{background:var(--teal);color:var(--bg);border:0;border-radius:5px;padding:8px 14px;cursor:pointer;font-weight:700}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.tools{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tool{background:var(--bg);border:1px solid var(--gold);border-radius:5px;padding:6px 10px;cursor:pointer}
+.tool:hover{background:var(--gold);color:var(--bg)}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.notes{margin:8px 0;padding-left:20px;min-height:3em}
+.notes li{margin:3px 0}
+select{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:6px}
+.opts{display:grid;gap:6px}
+.opts .btn{text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--teal)}
+.opts .btn:hover{background:var(--teal);color:var(--bg)}
+#msg{min-height:1.6em;margin-top:10px;font-weight:500}
+.ok{color:var(--good)}.ko{color:var(--bad)}
+details{margin-top:16px}
+summary{cursor:pointer;font-family:Almendra,serif;font-size:20px;color:var(--gold)}
+.gr li{margin:4px 0}
+.end{text-align:center}
+.stars{font-size:42px;color:var(--gold)}
+.hint{color:var(--mute);font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>Le laboratoire des alchimistes</h1><div class="stat" id="stat"></div></header>
+<main id="app"></main>
+<details class="card"><summary>Grimoire de l’alchimiste (rappels)</summary>
+<ul class="gr">
+<li><b>Corps pur</b> : une seule espèce chimique, aux constantes physiques bien définies (T<sub>éb</sub>, T<sub>fus</sub>, ρ). Pendant un changement d’état, la température reste constante (palier).</li>
+<li><b>Mélange</b> : plusieurs espèces. La température varie pendant le changement d’état et la CCM montre plusieurs taches.</li>
+<li><b>Masse volumique</b> : ρ = m / V (en g/mL). <b>Densité</b> : d = ρ / ρ<sub>eau</sub>, sans unité. Si d &lt; 1, le liquide surnage sur l’eau.</li>
+<li><b>Miscibilité</b> : deux liquides miscibles forment une seule phase. Non miscibles, ils forment deux phases superposées.</li>
+<li><b>Test à l’eau</b> : le sulfate de cuivre anhydre blanc devient bleu en présence d’eau.</li>
+<li><b>CCM</b> : chaque tache correspond à un constituant ; Rf = distance parcourue par la tache / distance parcourue par l’éluant.</li>
+</ul></details>
+</div>
+<script>
+const R="Mesure sans palier";
+const S={
+eau:{n:"Eau",c:"#8fd0ee",asp:"Liquide incolore, limpide.",mass:"m = 10,0 g pour V = 10,0 mL.",eau:"Un seul liquide homogène : l’eau s’y mélange parfaitement.",heat:"Palier net à 100 °C pendant l’ébullition.",cu:"Le sulfate de cuivre anhydre passe du blanc au bleu."},
+ethanol:{n:"Éthanol",c:"#bfe3f0",asp:"Liquide incolore, odeur alcoolisée.",mass:"m = 7,9 g pour V = 10,0 mL.",eau:"Miscible : une seule phase homogène.",heat:"Palier net à 78 °C pendant l’ébullition.",cu:"Le sulfate de cuivre anhydre reste blanc."},
+cyclo:{n:"Cyclohexane",c:"#c9e6ee",asp:"Liquide incolore, odeur de solvant.",mass:"m = 7,8 g pour V = 10,0 mL.",eau:"Non miscible : deux phases, le liquide surnage.",heat:"Palier net à 81 °C pendant l’ébullition.",cu:"Le sulfate de cuivre anhydre reste blanc."},
+dcm:{n:"Dichlorométhane",c:"#d4eaf0",asp:"Liquide incolore, très volatil.",mass:"m = 13,3 g pour V = 10,0 mL.",eau:"Non miscible : deux phases, le liquide coule au fond.",heat:"Palier net à 40 °C pendant l’ébullition.",cu:"Le sulfate de cuivre anhydre reste blanc."},
+nacl:{n:"Chlorure de sodium",c:"#f4f4f1",asp:"Cristaux blancs.",mass:"m = 10,0 g ; volume déplacé V = 4,6 mL.",eau:"Se dissout : solution limpide.",heat:"Aucun changement jusqu’à 300 °C : pas de fusion observée.",cu:"Aucune réaction visible."},
+sucre:{n:"Saccharose",c:"#fbfaf6",asp:"Poudre blanche cristalline.",mass:"m = 10,0 g ; volume déplacé V = 6,3 mL.",eau:"Se dissout : solution limpide.",heat:"Fond vers 186 °C puis brunit (caramel).",cu:"Aucune réaction visible."},
+mel:{n:"Mélange",c:"#6fbf73",asp:"Liquide vert translucide.",mass:"m = 9,3 g pour V = 10,0 mL.",eau:"Miscible : reste homogène.",heat:"La température monte de 79 °C à 97 °C sans aucun palier.",cu:"Le sulfate de cuivre anhydre passe du blanc au bleu.",ccm:"3 taches distinctes : jaune, bleue et rose."}
+};
+const CCM="1 seule tache après révélation : un seul constituant détecté.";
+const TOOLS=[["asp","Observer"],["mass","Peser (m et V)"],["eau","Ajouter de l’eau"],["heat","Chauffer"],["cu","Test CuSO₄ anhydre"],["ccm","CCM"]];
+const M=[
+{t:"Les liquides incolores",y:"id",ids:["eau","ethanol","cyclo","dcm"],s:"Ton maître Orfeo t’a légué son laboratoire, mais tous les flacons ont perdu leur étiquette. Identifie les quatre liquides incolores, puis étiquette-les. Rappel : calcule ρ = m / V."},
+{t:"Premières commandes",y:"o",it:[
+{q:"Mara l’apothicaire veut un solvant non miscible à l’eau, qui surnage et bout à 81 °C.",a:"cyclo"},
+{q:"Le forgeron Bran veut un liquide non miscible à l’eau et plus dense qu’elle (d > 1).",a:"dcm"}],s:"Les clients arrivent. Sélectionne le flacon qui répond à chaque demande."},
+{t:"Les poudres blanches",y:"id",ids:["nacl","sucre"],s:"Deux solides blancs se ressemblent. Une seule propriété ne suffit pas toujours : croise tes mesures."},
+{t:"Commandes du village",y:"o",it:[
+{q:"Dame Aveline veut un solide blanc soluble dans l’eau qui reste intact à 300 °C.",a:"nacl"},
+{q:"Le confiseur Tobin veut un solide blanc soluble qui fond vers 186 °C et caramélise.",a:"sucre"}],s:"Livre les bons flacons."},
+{t:"L’art de purifier",y:"q",it:[
+{q:"Comment récupérer l’eau pure d’une eau salée ?",o:["Filtration","Décantation","Distillation","Chromatographie"],a:2,w:"Le sel n’est pas volatil : l’eau s’évapore, puis se condense dans le réfrigérant."},
+{q:"Cyclohexane et eau (non miscibles) sont mélangés. Quelle technique les sépare ?",o:["Distillation","Décantation en ampoule","Filtration","Évaporation"],a:1,w:"Deux phases distinctes : la phase dense est soutirée par le bas de l’ampoule."},
+{q:"Comment séparer l’éthanol (78 °C) de l’eau (100 °C), miscibles ?",o:["Décantation","Filtration","Distillation fractionnée","Test au CuSO₄"],a:2,w:"Les températures d’ébullition diffèrent : l’éthanol, plus volatil, distille en premier."}],s:"Avant de continuer, vérifie tes connaissances sur la séparation des constituants."},
+{t:"Le flacon vert",y:"id",ids:["mel"],s:"Un élixir vert intrigue le village : corps pur ou mélange ? Utilise la CCM et le chauffage, puis étiquette-le « Mélange » ou le nom du corps pur."},
+{t:"Commandes royales",y:"o",it:[
+{q:"La sorcière Ysolde exige un corps pur : liquide miscible à l’eau, avec un palier d’ébullition à 78 °C.",a:"ethanol"},
+{q:"Le roi réclame un corps pur liquide qui bout à 100 °C et fait virer le CuSO₄ anhydre au bleu.",a:"eau"}],s:"Dernières commandes : seuls les corps purs sont acceptés."}
+];
+const $=s=>document.querySelector(s);
+let F,sel,mi,si,err,msg,notes;
+const flask=c=>`<svg viewBox="0 0 60 70" width="46" height="54" aria-hidden="true"><path d="M23 4h14v18l16 36c2 5-1 8-6 8H13c-5 0-8-3-6-8l16-36z" fill="var(--glass)" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/><path d="M12 50h36l5 9c1 4-1 7-5 7H13c-4 0-6-3-5-7z" fill="${c}"/></svg>`;
+function init(){const k=Object.keys(S).sort(()=>Math.random()-.5);F=k.map((x,i)=>({id:"ABCDEFG"[i],k:x,lab:""}));sel=null;mi=0;si=0;err=0;msg="";notes={};render()}
+const cur=()=>F.find(f=>f.id===sel);
+function use(t){const f=cur();(notes[f.id]=notes[f.id]||[]);const d=S[f.k];const r=t==="ccm"?(d.ccm||CCM):d[t];const l=TOOLS.find(x=>x[0]===t)[1];if(!notes[f.id].some(x=>x[0]===l))notes[f.id].push([l,r]);render()}
+function pick(id){sel=id;render()}
+function lab(v){cur().lab=v;render()}
+function next(m){mi++;si=0;msg=m||"";render()}
+function checkId(){const m=M[mi];const bad=F.filter(f=>m.ids.includes(f.k)&&f.lab!==f.k);if(!bad.length){next("✓ Étiquettes exactes, bravo !")}else{err+=bad.length;msg=`✗ ${m.ids.length-bad.length}/${m.ids.length} étiquettes justes. À revoir : ${bad.map(f=>f.id).join(", ")}. Relis ton carnet et croise plusieurs mesures.`;render()}}
+function deliver(){const it=M[mi].it[si];if(cur().k===it.a){si++;if(si>=M[mi].it.length)next("✓ Commande livrée, le client est ravi !");else{msg="✓ Bien joué ! Commande suivante.";render()}}else{err++;msg="✗ Ce flacon ne convient pas. Compare ses propriétés (densité, miscibilité, changement d’état) à la demande.";render()}}
+function ans(i){const it=M[mi].it[si];if(i===it.a){si++;const w=it.w;if(si>=M[mi].it.length)next("✓ "+w);else{msg="✓ "+w;render()}}else{err++;msg="✗ Pas tout à fait. Pense aux propriétés qui différencient les espèces à séparer.";render()}}
+function render(){
+$("#stat").textContent=mi<M.length?`Mission ${mi+1}/${M.length} · erreurs : ${err}`:"Fin de l’aventure";
+const a=$("#app");
+if(mi>=M.length){const st=err<=3?3:err<=7?2:1;a.innerHTML=`<section class="card end" style="margin-top:16px"><h2>Maître alchimiste !</h2><p class="stars" aria-label="${st} étoiles sur 3">${"★".repeat(st)}${"☆".repeat(3-st)}</p><p>Tu as remis de l’ordre dans le laboratoire d’Orfeo avec ${err} erreur${err>1?"s":""}.</p><p class="hint">Tu retiens : un corps pur a des constantes physiques précises (palier de T, ρ, une seule tache en CCM), alors qu’un mélange non.</p><button class="btn" onclick="init()">Rejouer (flacons mélangés)</button></section>`;return}
+const m=M[mi];let ctl="";
+if(m.y==="id")ctl=`<p class="q">Étiquette chaque flacon concerné : ${m.ids.length} à identifier.</p><button class="btn" onclick="checkId()">Valider mes étiquettes</button>`;
+if(m.y==="o"){const it=m.it[si];ctl=`<p class="q">Commande ${si+1}/${m.it.length} : ${it.q}</p><button class="btn" onclick="deliver()" ${sel?"":"disabled"}>${sel?`Livrer le flacon ${sel}`:"Sélectionne un flacon"}</button>`}
+if(m.y==="q"){const it=m.it[si];ctl=`<p class="q">Question ${si+1}/${m.it.length} : ${it.q}</p><div class="opts">${it.o.map((o,i)=>`<button class="btn" onclick="ans(${i})">${o}</button>`).join("")}</div>`}
+const f=sel&&cur();
+const bench=f?`<h3>Flacon ${f.id}</h3><div class="tools">${TOOLS.map(t=>`<button class="tool" onclick="use('${t[0]}')">${t[1]}</button>`).join("")}</div>
+<ul class="notes">${(notes[f.id]||[]).map(n=>`<li><b>${n[0]}</b> : ${n[1]}</li>`).join("")||'<li class="hint">Carnet vide : utilise un instrument.</li>'}</ul>
+<label>Étiquette : <select onchange="lab(this.value)"><option value="">— à identifier —</option>${Object.keys(S).map(k=>`<option value="${k}" ${f.lab===k?"selected":""}>${S[k].n}</option>`).join("")}</select></label>`:'<p class="hint">Choisis un flacon sur l’étagère pour utiliser les instruments de la paillasse.</p>';
+a.innerHTML=`<section class="card mission" style="margin-top:16px"><h2>${m.t}</h2><p class="story">${m.s}</p>${ctl}<div id="msg" role="status" aria-live="polite" class="${msg[0]==="✓"?"ok":"ko"}">${msg}</div></section>
+<div class="grid"><section class="card"><h3 style="margin-bottom:8px">L’étagère d’Orfeo</h3><div class="shelf">${F.map(x=>`<button class="fk" aria-pressed="${sel===x.id}" onclick="pick('${x.id}')">${flask(S[x.k].c)}<b>${x.id}</b><small>${x.lab?S[x.lab].n:"?"}</small></button>`).join("")}</div></section>
+<section class="card"><h3 style="margin-bottom:6px">La paillasse</h3>${bench}</section></div>`}
+init();
+</script>
+</body>
+</html>
